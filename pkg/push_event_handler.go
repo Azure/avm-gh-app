@@ -4,9 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/google/go-github/v58/github"
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
+	"net/http"
 )
 
 var _ githubapp.EventHandler = &PushHandler{}
@@ -24,19 +27,27 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	if err := json.Unmarshal(payload, &event); err != nil {
 		return errors.Wrap(err, "failed to parse issue comment event payload")
 	}
+	logger := zerolog.Ctx(ctx)
 
-	fmt.Printf("After: %s\n", *event.After)
-	fmt.Printf("Repo Full Name: %s\n", *event.Repo.FullName)
+	if event.Pusher != nil && event.Pusher.GetName() == config.ExpectedPusherName {
+		logger.Debug().Msg("push event triggered by this app, ignore")
+		return nil
+	}
 
 	installationID := githubapp.GetInstallationIDFromEvent(&event)
-	client, err := p.NewInstallationClient(installationID)
+	itr, err := ghinstallation.New(http.DefaultTransport, config.Github.App.IntegrationID, installationID, []byte(config.Github.App.PrivateKey))
 	if err != nil {
 		return err
 	}
-	token, _, err := client.Apps.CreateInstallationToken(ctx, installationID, nil)
+
+	token, err := itr.Token(context.Background())
 	if err != nil {
 		return err
 	}
-	fmt.Printf("installation token: %+v", token)
+	logger.Debug().Msg(fmt.Sprintf("token generated for event %+v", event))
+	return postPush(event, token)
+}
+
+func postPush(event github.PushEvent, token string) error {
 	return nil
 }
