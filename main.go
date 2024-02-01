@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	config, err := pkg.ReadConfig("githubapp_config.yml")
+	err := pkg.LoadConfig("githubapp_config.yml")
 	if err != nil {
 		panic(err)
 	}
@@ -25,8 +25,8 @@ func main() {
 	metricsRegistry := metrics.DefaultRegistry
 
 	cc, err := githubapp.NewDefaultCachingClientCreator(
-		config.Github,
-		githubapp.WithClientUserAgent("example-app/1.0.0"),
+		pkg.Cfg.Github,
+		githubapp.WithClientUserAgent("avmbot/1.0.0"),
 		githubapp.WithClientTimeout(3*time.Second),
 		githubapp.WithClientCaching(false, func() httpcache.Cache { return httpcache.NewMemoryCache() }),
 		githubapp.WithClientMiddleware(
@@ -40,7 +40,7 @@ func main() {
 	pushHandler := &pkg.PushHandler{
 		ClientCreator: cc,
 	}
-	dispatcher := githubapp.NewEventDispatcher([]githubapp.EventHandler{pushHandler}, config.Github.App.WebhookSecret, githubapp.WithScheduler(
+	dispatcher := githubapp.NewEventDispatcher([]githubapp.EventHandler{pushHandler}, pkg.Cfg.Github.App.WebhookSecret, githubapp.WithScheduler(
 		githubapp.AsyncScheduler(),
 	))
 
@@ -48,7 +48,7 @@ func main() {
 
 	http.Handle(githubapp.DefaultWebhookRoute, dispatcher)
 
-	addr := fmt.Sprintf("%s:%d", config.Server.Address, config.Server.Port)
+	addr := fmt.Sprintf("%s:%d", pkg.Cfg.Server.Address, pkg.Cfg.Server.Port)
 	logger.Info().Msgf("Starting server on %s...", addr)
 	err = http.ListenAndServe(addr, nil)
 	if err != nil {

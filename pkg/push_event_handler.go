@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/google/go-github/v58/github"
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"net/http"
 )
 
 var _ githubapp.EventHandler = &PushHandler{}
@@ -29,13 +30,13 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	}
 	logger := zerolog.Ctx(ctx)
 
-	if event.Pusher != nil && event.Pusher.GetName() == config.ExpectedPusherName {
+	if event.Pusher != nil && event.Pusher.GetName() == Cfg.ExpectedPusherName {
 		logger.Debug().Msg("push event triggered by this app, ignore")
 		return nil
 	}
 
 	installationID := githubapp.GetInstallationIDFromEvent(&event)
-	itr, err := ghinstallation.New(http.DefaultTransport, config.Github.App.IntegrationID, installationID, []byte(config.Github.App.PrivateKey))
+	itr, err := ghinstallation.New(http.DefaultTransport, Cfg.Github.App.IntegrationID, installationID, []byte(Cfg.Github.App.PrivateKey))
 	if err != nil {
 		return err
 	}
@@ -44,7 +45,7 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	if err != nil {
 		return err
 	}
-	logger.Debug().Msg(fmt.Sprintf("token generated for event %+v", event))
+	logger.Debug().Msg(fmt.Sprintf("token generated for event %+v, %s", event, token))
 	return postPush(event, token)
 }
 

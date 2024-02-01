@@ -1,10 +1,12 @@
 package pkg
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 )
 
 type Config struct {
@@ -18,21 +20,32 @@ type HTTPConfig struct {
 	Port    int    `yaml:"port"`
 }
 
-var config *Config
+var Cfg *Config
 
-func ReadConfig(path string) (*Config, error) {
+func LoadConfig(path string) error {
 	var c Config
 
-	bytes, err := ioutil.ReadFile(path)
+	bytes, err := os.ReadFile(path)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed reading server config file: %s", path)
+		return errors.Wrapf(err, "failed reading server config file: %s", path)
 	}
 
 	if err := yaml.UnmarshalStrict(bytes, &c); err != nil {
-		return nil, errors.Wrap(err, "failed parsing configuration file")
+		return errors.Wrap(err, "failed parsing configuration file")
 	}
+	Cfg = &c
+	return nil
+}
 
-	config = &c
-
-	return &c, nil
+func LoadConfigFromEnv() error {
+	var c Config
+	cfg, exist := os.LookupEnv("GITHUB_APP_CONFIG")
+	if !exist {
+		return fmt.Errorf("cannot read app config from env `GITHUB_APP_CONFIG`")
+	}
+	if err := yaml.UnmarshalStrict([]byte(cfg), &c); err != nil {
+		return errors.Wrap(err, "failed parsing configuration file")
+	}
+	Cfg = &c
+	return nil
 }
