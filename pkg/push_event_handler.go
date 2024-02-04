@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/alexellis/go-execute/v2"
 	"github.com/bradleyfalzon/ghinstallation/v2"
@@ -31,7 +32,12 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	}
 	logger := zerolog.Ctx(ctx)
 
-	if event.Pusher != nil && event.Pusher.GetName() == Cfg.ExpectedPusherName {
+	if !strings.HasSuffix(event.GetBaseRef(), fmt.Sprintf("/%s", event.Repo.GetDefaultBranch())) {
+		logger.Debug().Msg("push to non-default branch, ignore")
+		return nil
+	}
+
+	if event.Pusher.GetName() == Cfg.ExpectedPusherName {
 		logger.Debug().Msg("push event triggered by this app, ignore")
 		return nil
 	}
@@ -47,17 +53,24 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 		return err
 	}
 	logger.Debug().Msg(fmt.Sprintf("token generated for event %+v, %s", event, token))
-	//return postPush(ctx, event, token)
-	return nil
+	return postPush(ctx, event, token)
 }
 
 func postPush(ctx context.Context, event github.PushEvent, token string) error {
+	fullName := event.Repo.GetFullName()
+	owner := strings.TrimSuffix(fullName, fmt.Sprintf("/%s", event.Repo.GetName()))
+	scriptFolder := "scripts"
+	if strings.Contains(fullName, "-avm-") {
+		scriptFolder = "avm_scripts"
+	}
 	task := execute.ExecTask{
-		Command: "curl -H 'Cache-Control: no-cache, no-store' -sSL \"https://raw.githubusercontent.com/Azure/tfmod-scaffold/main/scripts/post-push-starter.sh\" | sh -s",
+		Command: "curl -H 'Cache-Control: no-cache, no-store' -sSL \"https://raw.githubusercontent.com/Azure/tfmod-scaffold/main/scripts/post-push-starter.sh\" | bash",
 		Shell:   true,
 		Env: []string{
-			fmt.Sprintf("GITHUB_REPOSITORY="),
+			fmt.Sprintf("GITHUB_REPOSITORY=%s", fullName),
+			fmt.Sprintf("GITHUB_REPOSITORY_OWNER=%s", owner),
 			fmt.Sprintf("GITHUB_TOKEN=%s", token),
+			fmt.Sprintf("SCRIPT_FOLDER=%s", scriptFolder),
 		},
 		StreamStdio: true,
 	}
