@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/alexellis/go-execute/v2 v2.2.1 // indirect
 	github.com/bradleyfalzon/ghinstallation/v2 v2.9.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/palantir/go-githubapp/githubapp"
@@ -37,12 +36,8 @@ func LoadConfig(path string) error {
 	return nil
 }
 
-func LoadConfigFromEnv() error {
+func LoadConfigFromYamlString(cfg string) error {
 	var c Config
-	cfg, exist := os.LookupEnv("GITHUB_APP_CONFIG")
-	if !exist {
-		return fmt.Errorf("cannot read app config from env `GITHUB_APP_CONFIG`")
-	}
 	if err := yaml.UnmarshalStrict([]byte(cfg), &c); err != nil {
 		return errors.Wrap(err, "failed parsing configuration file")
 	}

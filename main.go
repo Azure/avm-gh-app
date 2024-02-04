@@ -14,11 +14,18 @@ import (
 )
 
 func main() {
-	err := pkg.LoadConfig("githubapp_config.yml")
-	if err != nil {
-		panic(err)
+	cfgFromEnv, exist := os.LookupEnv("GITHUB_APP_CONFIG")
+	if exist {
+		err := pkg.LoadConfigFromYamlString(cfgFromEnv)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		err := pkg.LoadConfig("githubapp_config.yml")
+		if err != nil {
+			panic(err)
+		}
 	}
-
 	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	zerolog.DefaultContextLogger = &logger
 
