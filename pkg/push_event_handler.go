@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/alexellis/go-execute/v2"
@@ -32,7 +33,7 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	}
 	logger := zerolog.Ctx(ctx)
 
-	if !strings.HasSuffix(event.GetBaseRef(), fmt.Sprintf("/%s", event.Repo.GetDefaultBranch())) {
+	if !strings.HasSuffix(event.GetRef(), fmt.Sprintf("/%s", event.Repo.GetDefaultBranch())) {
 		logger.Debug().Msg("push to non-default branch, ignore")
 		return nil
 	}
@@ -58,6 +59,13 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 
 func postPush(ctx context.Context, event github.PushEvent, token string) error {
 	fullName := event.Repo.GetFullName()
+	tmp, err := os.MkdirTemp("", fmt.Sprintf("%s*", strings.ReplaceAll(fullName, "/", "-")))
+	if err != nil {
+		return fmt.Errorf("cannot create temp folder")
+	}
+	defer func() {
+		_ = os.RemoveAll(tmp)
+	}()
 	owner := strings.TrimSuffix(fullName, fmt.Sprintf("/%s", event.Repo.GetName()))
 	scriptFolder := "scripts"
 	if strings.Contains(fullName, "-avm-") {
@@ -72,6 +80,7 @@ func postPush(ctx context.Context, event github.PushEvent, token string) error {
 			fmt.Sprintf("GITHUB_TOKEN=%s", token),
 			fmt.Sprintf("SCRIPT_FOLDER=%s", scriptFolder),
 		},
+		Cwd:         tmp,
 		StreamStdio: true,
 	}
 	result, err := task.Execute(ctx)
