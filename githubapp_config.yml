@@ -8,5 +8,5 @@ github:
   v3_api_url: "https://api.github.com/"
   app:
     integration_id: 811509
-    webhook_secret: ""
+    webhook_secret: ${webhook_secret}
     private_key: |
