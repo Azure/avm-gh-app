@@ -1,4 +1,4 @@
-module github.com/lonegunmanb/avm-gh-app
+module avm-gh-app
 
 go 1.21.6
 
