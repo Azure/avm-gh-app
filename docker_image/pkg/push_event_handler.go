@@ -34,7 +34,7 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	logger := zerolog.Ctx(ctx)
 
 	fullName := event.Repo.GetFullName()
-	if !strings.HasPrefix(fullName, "Azure/terraform-azurerm-avm-") {
+	if !strings.Contains(fullName, "terraform-azurerm-avm-") {
 		logger.Debug().Msg("non-avm repo, ignore")
 		return nil
 	}

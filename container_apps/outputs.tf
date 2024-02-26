@@ -1,3 +1,3 @@
 output "app_url" {
-  value = module.telemetry_proxy.container_app_fqdn
+  value = module.avmgithubapp.container_app_fqdn
 }

@@ -9,7 +9,7 @@ resource "azurerm_application_insights" "this" {
   resource_group_name = var.resource_group_name
 }
 
-module "telemetry_proxy" {
+module "avmgithubapp" {
   source                                             = "Azure/container-apps/azure"
   version                                            = "0.2.0"
   container_app_environment_name                     = var.container_app_environment_name

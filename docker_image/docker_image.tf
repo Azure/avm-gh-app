@@ -1,6 +1,10 @@
 resource "null_resource" "go_code_keeper" {
   triggers = {
-    code_hash  = filemd5("${path.module}/main.go")
+    code_hash  = md5(join("", [
+      filemd5("${path.module}/main.go"),
+      filemd5("${path.module}/pkg/config.go"),
+      filemd5("${path.module}/pkg/push_event_handler.go")
+    ]))
     dockerfile = filemd5("${path.module}/Dockerfile")
   }
 }
