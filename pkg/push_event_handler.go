@@ -33,6 +33,12 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	}
 	logger := zerolog.Ctx(ctx)
 
+	fullName := event.Repo.GetFullName()
+	if !strings.HasPrefix(fullName, "Azure/terraform-azurerm-avm-") {
+		logger.Debug().Msg("non-avm repo, ignore")
+		return nil
+	}
+
 	if !strings.HasSuffix(event.GetRef(), fmt.Sprintf("/%s", event.Repo.GetDefaultBranch())) {
 		logger.Debug().Msg("push to non-default branch, ignore")
 		return nil
