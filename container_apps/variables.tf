@@ -2,12 +2,6 @@ variable "location" {
   type = string
 }
 
-variable "telemetry_proxy_diag" {
-  type     = bool
-  default  = false
-  nullable = false
-}
-
 variable "resource_group_name" {
   type = string
 }
@@ -35,11 +29,6 @@ variable "docker_image" {
 
 variable "container_app_environment_name" {
   type = string
-}
-
-variable "github_app_config" {
-  type = string
-  sensitive = true
 }
 
 variable "port" {

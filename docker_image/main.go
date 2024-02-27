@@ -14,9 +14,9 @@ import (
 )
 
 func main() {
-	cfgFromEnv, exist := os.LookupEnv("GITHUB_APP_CONFIG")
+	_, exist := os.LookupEnv("GH_APP_PRIVATE_KEY_PEM")
 	if exist {
-		err := pkg.LoadConfigFromYamlString(cfgFromEnv)
+		err := pkg.LoadConfigFromEvn()
 		if err != nil {
 			panic(err)
 		}
