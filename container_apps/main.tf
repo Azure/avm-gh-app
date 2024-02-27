@@ -34,8 +34,16 @@ module "avmgithubapp" {
             image  = var.docker_image
             env = toset([
               {
-                name  = "GITHUB_APP_CONFIG"
-                secret_name = "config"
+                name  = "GH_APP_PRIVATE_KEY_PEM"
+                secret_name = "ghappprivatekeypem"
+              },
+              {
+                name  = "GH_APP_INTEGRATION_ID"
+                secret_name = "ghappintegrationid"
+              },
+              {
+                name  = "GH_APP_WEBHOOK_SECRET"
+                secret_name = "ghappwebhooksecret"
               },
               ])
           }
@@ -59,9 +67,17 @@ module "avmgithubapp" {
         value = var.acr_user_password
       },
       {
-        name  = "config"
-        value = var.github_app_config
-      }
+        name  = "ghappprivatekeypem"
+        value = var.gh_app_private_key_pem
+      },
+      {
+        name = "ghappwebhooksecret"
+        value = var.gh_app_private_key_pem
+      },
+      {
+        name = "ghappintegrationid"
+        value = var.gh_app_integration_id
+      },
     ]
   }
   location                     = var.location

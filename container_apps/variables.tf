@@ -34,3 +34,18 @@ variable "container_app_environment_name" {
 variable "port" {
   type = number
 }
+
+variable "gh_app_integration_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "gh_app_webhook_secret" {
+  type      = string
+  sensitive = true
+}
+
+variable "gh_app_private_key_pem" {
+  type      = string
+  sensitive = true
+}

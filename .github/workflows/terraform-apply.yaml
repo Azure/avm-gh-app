@@ -13,9 +13,9 @@ jobs:
       - uses: hashicorp/setup-terraform@a1502cd9e758c50496cc9ac5308c4843bcd56d36 # 3.0.0
       - name: apply
         env:
-          GH_APP_PRIVATE_KEY_PEM: ${{ secrets.PRIVATE_KEY_PEM }}
-          GH_APP_WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-          GH_APP_INTEGRATION_ID: ${{ secrets.APP_INTEGRATION_ID }}
+          TF_VAR_gh_app_private_key_pem: ${{ secrets.PRIVATE_KEY_PEM }}
+          TF_VAR_gh_app_webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          TF_VAR_gh_app_integration_id: ${{ secrets.APP_INTEGRATION_ID }}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{ secrets.BACKEND_STORAGE_ACCOUNT_NAME }}
           BACKEND_RESOURCE_GROUP_NAME: ${{ secrets.BACKEND_RESOURCE_GROUP_NAME }}
           BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
