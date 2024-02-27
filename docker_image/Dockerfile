@@ -5,7 +5,7 @@ COPY .. /src
 WORKDIR /src
 
 RUN ls -a && export CGO_ENABLED=0 && \
-    go install github.com/lonegunmanb/avm-gh-app
+    go install avm-gh-app
 
 FROM mcr.microsoft.com/azterraform:${AZTERRAFORM_TAG} as runner
 COPY --from=build /go/bin /usr/local/go/bin
