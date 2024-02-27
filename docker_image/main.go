@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
+	"avm-gh-app/pkg"
 	"github.com/gregjones/httpcache"
-	"github.com/lonegunmanb/avm-gh-app/pkg"
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/rcrowley/go-metrics"
 	"github.com/rs/zerolog"
