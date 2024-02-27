@@ -1,0 +1,25 @@
+name: Terraform Plan
+on:
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: [self-hosted, 1ES.Pool=avm-gh-app]
+    environment:
+      name: tfstate
+    steps:
+      - name: checkout
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # 3.6.0
+      - uses: hashicorp/setup-terraform@a1502cd9e758c50496cc9ac5308c4843bcd56d36 # 3.0.0
+      - name: plan
+        env:
+          TF_VAR_gh_app_private_key: ${{ secrets.PRIVATE_KEY_PEM }}
+          TF_VAR_webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          TF_VAR_app_integration_id: ${{ secrets.APP_INTEGRATION_ID }}
+        run: |
+          az login --identity --username $MSI_ID > /dev/null
+          export ARM_SUBSCRIPTION_ID=$(az login --identity --username $MSI_ID | jq -r '.[0] | .id')
+          export ARM_TENANT_ID=$(az login --identity --username $MSI_ID | jq -r '.[0] | .tenantId')
+          export ARM_USE_MSI=true
+          terraform init
+          terraform apply -auto-approve
