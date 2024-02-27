@@ -30,7 +30,7 @@ jobs:
           TF_VAR_gh_app_private_key: ${{ secrets.PRIVATE_KEY_PEM }}
           TF_VAR_webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
           TF_VAR_app_integration_id: ${{ secrets.APP_INTEGRATION_ID }}
-          BACKEND_STORAGE_ACCOUNT_NAME: ${{ BACKEND_STORAGE_ACCOUNT_NAME }}
+          BACKEND_STORAGE_ACCOUNT_NAME: ${{ secrets.BACKEND_STORAGE_ACCOUNT_NAME }}
           BACKEND_RESOURCE_GROUP_NAME: ${{ secrets.BACKEND_RESOURCE_GROUP_NAME }}
           BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
           BACKEND_KEY: ${{ secrets.BACKEND_KEY }}

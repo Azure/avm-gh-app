@@ -45,7 +45,7 @@ jobs:
       - name: Init
         if: env.PR_NUM != ''
         env:
-          BACKEND_STORAGE_ACCOUNT_NAME: ${{ BACKEND_STORAGE_ACCOUNT_NAME }}
+          BACKEND_STORAGE_ACCOUNT_NAME: ${{ secrets.BACKEND_STORAGE_ACCOUNT_NAME }}
           BACKEND_RESOURCE_GROUP_NAME: ${{ secrets.BACKEND_RESOURCE_GROUP_NAME }}
           BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
           BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
