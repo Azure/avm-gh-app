@@ -11,7 +11,8 @@ variable "webhook_secret" {
   sensitive = true
 }
 
-variable "gh_app_private_key" {
+# cat key.pem | base64 -w 0
+variable "gh_app_private_key_base64" {
   type = string
   sensitive = true
 }

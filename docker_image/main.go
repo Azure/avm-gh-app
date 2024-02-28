@@ -14,9 +14,9 @@ import (
 )
 
 func main() {
-	_, exist := os.LookupEnv("GH_APP_PRIVATE_KEY_PEM")
+	_, exist := os.LookupEnv("GH_APP_CONFIG")
 	if exist {
-		err := pkg.LoadConfigFromEvn()
+		err := pkg.LoadConfigFromEnv()
 		if err != nil {
 			panic(err)
 		}

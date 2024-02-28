@@ -34,6 +34,7 @@ module "container_apps" {
   location                       = module.resource_group.resource_group_location
   resource_group_name            = module.resource_group.resource_group_name
   subnet_id                      = module.acr.container_apps_subnet_id
+  port                           = local.port
   github_app_config              = sensitive(yamlencode({
     server = {
       address = "0.0.0.0"
@@ -45,9 +46,8 @@ module "container_apps" {
       app = {
         integration_id = var.app_integration_id
         webhook_secret = var.webhook_secret
-        private_key = var.gh_app_private_key
+        private_key = base64decode(var.gh_app_private_key_base64)
       }
     }
   }))
-  port = local.port
 }

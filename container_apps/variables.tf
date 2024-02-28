@@ -35,17 +35,7 @@ variable "port" {
   type = number
 }
 
-variable "gh_app_integration_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "gh_app_webhook_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "gh_app_private_key_pem" {
+variable "github_app_config" {
   type      = string
   sensitive = true
 }

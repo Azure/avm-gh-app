@@ -1,12 +1,10 @@
 package pkg
 
 import (
-	"os"
-	"strconv"
-
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
+	"os"
 )
 
 type Config struct {
@@ -37,15 +35,11 @@ func LoadConfig(path string) error {
 	return nil
 }
 
-func LoadConfigFromEvn() error {
+func LoadConfigFromEnv() error {
 	var c Config
-	c.Github.App.PrivateKey = os.Getenv("GH_APP_PRIVATE_KEY_PEM")
-	integrationId, err := strconv.Atoi(os.Getenv("GH_APP_INTEGRATION_ID"))
-	if err != nil {
-		return err
+	if err := yaml.UnmarshalStrict([]byte(os.Getenv("GH_APP_CONFIG")), &c); err != nil {
+		return errors.Wrap(err, "failed parsing configuration file")
 	}
-	c.Github.App.IntegrationID = int64(integrationId)
-	c.Github.App.WebhookSecret = os.Getenv("GH_APP_WEBHOOK_SECRET")
 	Cfg = &c
 	return nil
 }

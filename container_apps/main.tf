@@ -14,11 +14,11 @@ module "avmgithubapp" {
   version                                            = "0.2.0"
   container_app_environment_name                     = var.container_app_environment_name
   container_app_environment_infrastructure_subnet_id = var.subnet_id
-  container_apps = {
+  container_apps                                     = {
     avmghapp = {
       name          = "avmghapp"
       revision_mode = "Single"
-      registry = [
+      registry      = [
         {
           server               = var.acr_url
           username             = var.acr_user_name
@@ -32,20 +32,12 @@ module "avmgithubapp" {
             memory = "0.5Gi"
             cpu    = 0.25
             image  = var.docker_image
-            env = toset([
+            env    = toset([
               {
-                name  = "GH_APP_PRIVATE_KEY_PEM"
-                secret_name = "ghappprivatekeypem"
+                name        = "GH_APP_CONFIG"
+                secret_name = "ghappconfig"
               },
-              {
-                name  = "GH_APP_INTEGRATION_ID"
-                secret_name = "ghappintegrationid"
-              },
-              {
-                name  = "GH_APP_WEBHOOK_SECRET"
-                secret_name = "ghappwebhooksecret"
-              },
-              ])
+            ])
           }
         ]
       }
@@ -53,7 +45,7 @@ module "avmgithubapp" {
         allow_insecure_connection = false
         external_enabled          = true
         target_port               = local.port
-        traffic_weight = {
+        traffic_weight            = {
           latest_revision = true
           percentage      = 100
         }
@@ -67,16 +59,8 @@ module "avmgithubapp" {
         value = var.acr_user_password
       },
       {
-        name  = "ghappprivatekeypem"
-        value = var.gh_app_private_key_pem
-      },
-      {
-        name = "ghappwebhooksecret"
-        value = var.gh_app_private_key_pem
-      },
-      {
-        name = "ghappintegrationid"
-        value = var.gh_app_integration_id
+        name  = "ghappconfig"
+        value = var.github_app_config
       },
     ]
   }
