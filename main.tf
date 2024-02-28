@@ -44,8 +44,8 @@ module "container_apps" {
     github = {
       v3_api_url = "https://api.github.com/"
       app = {
-        integration_id = var.app_integration_id
-        webhook_secret = var.webhook_secret
+        integration_id = var.gh_app_integration_id
+        webhook_secret = var.gh_app_webhook_secret
         private_key = base64decode(var.gh_app_private_key_pem_base64)
       }
     }

@@ -2,11 +2,11 @@ variable "image_tag" {
   default = "latest"
 }
 
-variable "app_integration_id" {
+variable "gh_app_integration_id" {
   type = number
 }
 
-variable "webhook_secret" {
+variable "gh_app_webhook_secret" {
   type = string
   sensitive = true
 }
