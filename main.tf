@@ -46,7 +46,7 @@ module "container_apps" {
       app = {
         integration_id = var.app_integration_id
         webhook_secret = var.webhook_secret
-        private_key = base64decode(var.gh_app_private_key_base64)
+        private_key = base64decode(var.gh_app_private_key_pem_base64)
       }
     }
   }))
