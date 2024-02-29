@@ -25,7 +25,7 @@ jobs:
           BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
           BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
         run: |
-          docker run --rm -it -e TF_VAR_gh_app_private_key_pem_base64 -e TF_VAR_gh_app_webhook_secret \
+          docker run --rm -e TF_VAR_gh_app_private_key_pem_base64 -e TF_VAR_gh_app_webhook_secret \
           -e TF_VAR_gh_app_integration_id -e BACKEND_STORAGE_ACCOUNT_NAME -e BACKEND_RESOURCE_GROUP_NAME \
           -e BACKEND_CONTAINER_NAME -e BACKEND_KEY -e TF_VAR_image_tag -e MSI_ID \
           -v /var/run/docker.sock:/var/run/docker.sock \
