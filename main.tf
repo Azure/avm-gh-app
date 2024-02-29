@@ -1,7 +1,7 @@
 module "resource_group" {
   source   = "./resource_group"
   location = "eastus"
-  name     = "avm-github-app"
+  name     = "avmgithubapp"
 }
 
 module "acr" {

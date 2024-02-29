@@ -2,13 +2,6 @@ locals {
   port = var.port
 }
 
-resource "azurerm_application_insights" "this" {
-  application_type    = "other"
-  location            = var.location
-  name                = "avmghapp"
-  resource_group_name = var.resource_group_name
-}
-
 module "avmgithubapp" {
   source                                             = "Azure/container-apps/azure"
   version                                            = "0.2.0"
