@@ -8,15 +8,11 @@ resource "null_resource" "go_code_keeper" {
       filemd5("${path.module}/go.sum"),
     ]))
     dockerfile     = filemd5("${path.module}/Dockerfile")
-    base_image_tag = var.base_image_tag
   }
 }
 
 resource "docker_image" "proxy" {
   name      = "${var.registry_url}/avm-github-app"
-  build_arg = {
-    AZTERRAFORM_TAG = var.base_image_tag
-  }
   triggers = {
     code_hash  = filemd5("${path.module}/main.go")
     dockerfile = filemd5("${path.module}/Dockerfile")
