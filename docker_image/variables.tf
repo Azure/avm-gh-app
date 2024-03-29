@@ -15,3 +15,8 @@ variable "image_tag" {
   type    = string
   default = "latest"
 }
+
+variable "base_image_tag" {
+  type    = string
+  default = "latest"
+}

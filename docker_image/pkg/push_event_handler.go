@@ -50,20 +50,15 @@ func (p PushHandler) Handle(ctx context.Context, eventType, deliveryID string, p
 	}
 
 	installationID := githubapp.GetInstallationIDFromEvent(&event)
-	logger.Debug().Msg(fmt.Sprintf("private key: %s", Cfg.Github.App.PrivateKey))
-	logger.Debug().Msg(fmt.Sprintf("integrationID: %s", Cfg.Github.App.IntegrationID))
-	logger.Debug().Msg(fmt.Sprintf("installationID: %s", installationID))
 	itr, err := ghinstallation.New(http.DefaultTransport, Cfg.Github.App.IntegrationID, installationID, []byte(Cfg.Github.App.PrivateKey))
 	if err != nil {
 		return err
 	}
-	logger.Debug().Msg("itr ready")
 
 	token, err := itr.Token(context.Background())
 	if err != nil {
 		return err
 	}
-	logger.Debug().Msg(fmt.Sprintf("token generated for event %+v, %s", event, token))
 	return postPush(ctx, event, token)
 }
 
