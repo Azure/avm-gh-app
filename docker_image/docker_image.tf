@@ -3,7 +3,9 @@ resource "null_resource" "go_code_keeper" {
     code_hash = md5(join("", [
       filemd5("${path.module}/main.go"),
       filemd5("${path.module}/pkg/config.go"),
-      filemd5("${path.module}/pkg/push_event_handler.go")
+      filemd5("${path.module}/pkg/push_event_handler.go"),
+      filemd5("${path.module}/go.mod"),
+      filemd5("${path.module}/go.sum"),
     ]))
     dockerfile     = filemd5("${path.module}/Dockerfile")
     base_image_tag = var.base_image_tag
