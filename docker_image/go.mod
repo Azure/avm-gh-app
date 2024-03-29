@@ -3,18 +3,18 @@ module avm-gh-app
 go 1.21.6
 
 require (
+	github.com/alexellis/go-execute/v2 v2.2.1
+	github.com/bradleyfalzon/ghinstallation/v2 v2.9.0
 	github.com/google/go-github/v58 v58.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/palantir/go-githubapp v0.22.0
 	github.com/pkg/errors v0.9.1
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
-	github.com/rs/zerolog v1.31.0
+	github.com/rs/zerolog v1.32.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
-	github.com/alexellis/go-execute/v2 v2.2.1 // indirect
-	github.com/bradleyfalzon/ghinstallation/v2 v2.9.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-github/v57 v57.0.0 // indirect
