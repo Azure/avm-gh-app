@@ -10,7 +10,7 @@ import (
 
 	"github.com/alexellis/go-execute/v2"
 	"github.com/bradleyfalzon/ghinstallation/v2"
-	"github.com/google/go-github/v58/github"
+	"github.com/google/go-github/v60/github"
 	"github.com/palantir/go-githubapp/githubapp"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
