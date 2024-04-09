@@ -56,6 +56,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up Go
+      uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 #3.5.0
+      with:
+        go-version: 1.21.3
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -68,10 +72,6 @@ jobs:
 
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
-    - name: Set up Go
-      uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 #3.5.0
-      with:
-        go-version: 1.21.3
 
     # If the analyze step fails for one of the languages you are analyzing with
     # "We were unable to automatically build your code", modify the matrix above
@@ -79,11 +79,12 @@ jobs:
     # to build your code.
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - if: matrix.build-mode == 'manual'
+    - name: go build
+      if: matrix.build-mode == 'manual'
       run: |
         cd ./docker_image
         go mod tidy
-        go build ./...
+        go build avm-gh-app
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
